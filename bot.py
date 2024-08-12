@@ -1,7 +1,9 @@
+import os
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
-API_TOKEN = '7404663316:AAHsxPh24vLYrcW8SoojMhoDM_SQhhz8vcw'
+# Получаем токен из переменной окружения
+API_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
