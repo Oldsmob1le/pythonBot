@@ -1,20 +1,27 @@
-import os
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, F
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from aiogram.utils import executor
+import logging
+import os
 
-# Получаем токен из переменной окружения
 API_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher()
 
-@dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
+logging.basicConfig(level=logging.INFO)
+
+@dp.message(F.command("start"))
+async def send_welcome(message):
     # Создаем Inline-кнопку с WebAppInfo
     web_app = WebAppInfo(url='https://<your_domain>')
     inline_kb = InlineKeyboardMarkup().add(InlineKeyboardButton("Перейти", web_app=web_app))
     
     await message.answer("Нажмите на кнопку ниже, чтобы перейти к веб-приложению.", reply_markup=inline_kb)
 
+async def on_startup(dispatcher):
+    logging.info("Starting bot...")
+
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    from aiogram import executor
+    executor.start_polling(dp, on_startup=on_startup)
